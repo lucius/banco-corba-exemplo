@@ -1,0 +1,7 @@
+	    orbProps.put("org.omg.CORBA.ORBInitialHost", args[0]);
+	    orbProps.put("org.omg.CORBA.ORBInitialPort", args[1]);
+	    orbProps.put("org.omg.CORBA.ORBServerHost", args[0]);
+	    orbProps.put("org.omg.CORBA.ORBServerPort", args[1]);
+
+
+/opt/jdk1.6.0_10/jre/bin/orbd -ORBInitialPort 9999 -ORBInitialHost localhost -ORBServerHost localhost -ORBServerPort 10000

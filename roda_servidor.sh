@@ -30,21 +30,9 @@ function checa_existencia {
 
 
 function limpa_orb {
-    ps -p $ORBD_PID >/dev/null 2>&1
-    if [ $? ]
-    then
-        echo "Matando o processo 'orbd' numero $ORBD_PID..."
-	kill -s SIGKILL $ORBD_PID >/dev/null 2>&1
-    fi
-
-    ORB_BD="$CLASSPATH/orb.db"
-    if [ -e $ORB_BD ]
-    then
-        echo "Removendo o banco de dados '$ORB_BD' gerado..."
-	rm -rf $ORB_BD >/dev/null 2>&1
-    fi
+	echo "Matando os processos 'orbd' e '$HOST'..."
+	kill -s SIGKILL $ORBD_PID $SERV_PID >/dev/null 2>&1 &
 }
-
 
 checa_existencia $JDK	    $ERR_JDK
 checa_existencia $ORBD	    $ERR_ORBD
@@ -54,22 +42,18 @@ checa_existencia $CLASSPATH $ERR_CLASSPATH
 
 echo "Inicializando, em background, o 'orbd' como '$HOST' na porta '$PORTA'"
 pushd $CLASSPATH >/dev/null 2>&1
-$ORBD -ORBInitialHost $HOST -ORBInitialPort $PORTA &
+$ORBD -ORBInitialHost $HOST -ORBInitialPort $PORTA >/dev/null 2>&1 &
 ORBD_PID=$!
 trap limpa_orb SIGINT
-
-
 sleep 1
 
 
 echo "Inicializando o 'Servidor' como '$HOST' na porta '$PORTA'"
-$JAVA servidor.Servidor $HOST $PORTA
+$JAVA servidor.Servidor $HOST $PORTA &
+SERV_PID=$!
 
 
-if [ ! $? ]
-then
-    limpa_orb
-fi
+wait
 
 
 popd >/dev/null 2>&1

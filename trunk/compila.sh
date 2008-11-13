@@ -23,10 +23,10 @@ function checa_existencia {
 }
 
 
-if [ ! -e bin ]
+if [ ! -e $CLASSPATH ]
 then
-	echo -n "Criando o diretorio dos binarios em './bin' "
-	mkdir bin
+	echo -n "Criando o diretorio dos binarios em '$CLASSPATH' "
+	mkdir $CLASSPATH
 	echo '[OK]'
 fi
 
@@ -37,6 +37,6 @@ checa_existencia $CLASSPATH $ERR_CLASSPATH
 
 
 echo -n 'Compilando os fontes... '
-$JAVAC -d ./bin ./src/*/*.java
+$JAVAC -d $CLASSPATH ./src/*/*.java
 echo '[OK]'
 
